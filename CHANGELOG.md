@@ -1,3 +1,6 @@
+- 2.5.0
+    - Added Normalized Compression Distance kernel
+
 - 2.4.1
     - Sentence Tokenizer fix Arabic and Farsi language support
 
