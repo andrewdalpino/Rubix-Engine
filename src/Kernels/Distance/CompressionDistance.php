@@ -6,6 +6,12 @@ use Rubix\ML\DataType;
 use Rubix\ML\Exceptions\InvalidArgumentException;
 
 use function gzdeflate;
+use function strlen;
+use function min;
+use function max;
+use function count;
+
+use const Rubix\ML\EPSILON;
 
 /**
  * Compression Distance
@@ -31,7 +37,7 @@ class CompressionDistance implements Distance
      * @param int $level
      * @throws \Rubix\ML\Exceptions\InvalidArgumentException
      */
-    public function __construct(int $level = 3)
+    public function __construct(int $level = 1)
     {
         if ($level < 0 or $level > 9) {
             throw new InvalidArgumentException('Level must be'
@@ -68,8 +74,8 @@ class CompressionDistance implements Distance
     /**
      * Compute the distance between two vectors.
      *
-     * @param list<string|int|float> $a
-     * @param list<string|int|float> $b
+     * @param list<string> $a
+     * @param list<string> $b
      * @return float
      */
     public function compute(array $a, array $b) : float
@@ -84,7 +90,7 @@ class CompressionDistance implements Distance
             $sizeAB = strlen(gzdeflate($valueA . $valueB, $this->level));
     
             $min = min($sizeAA, $sizeBB);
-            $max = max($sizeAA, $sizeBB);
+            $max = max($sizeAA, $sizeBB, EPSILON);
     
             $distance += ($sizeAB - $min) / $max;
         }
@@ -99,6 +105,6 @@ class CompressionDistance implements Distance
      */
     public function __toString() : string
     {
-        return "Deflate (level: {$this->level})";
+        return "Compression Distance (level: {$this->level})";
     }
 }
